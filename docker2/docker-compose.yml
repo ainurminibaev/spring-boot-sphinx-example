@@ -1,0 +1,33 @@
+
+db:
+    image: mysql:5.7
+    ports:
+        - "3306:3306"
+    environment:
+        MYSQL_USER: user
+        MYSQL_PASSWORD: user
+        MYSQL_ROOT_PASSWORD: root
+        MYSQL_DATABASE: user
+sphinx:
+    image: mysphinx
+#    build: .
+    ports:
+        - "127.0.0.1:36307:36307" # bind to local interface only!
+    volumes:
+        - ./data:/opt/sphinx/index  # directory where sphinx will store index data
+        - ./logs:/var/log/sphinxsearch  # directory where sphinx will store index data
+        - ./sphinx.conf:/opt/sphinx/conf/sphinx.conf  # SphinxSE configuration file
+    mem_limit: 512m # match indexer.value from sphinx.conf
+    links:
+       - db
+
+#web:
+#    image: java:openjdk-8-jdk
+#    working_dir: /app
+#    volumes:
+#        - ./target:/app
+#    ports:
+#        - "8080:8080"
+#    command: java -jar /app/user-rest-api-0.0.1-SNAPSHOT.jar
+#    links:
+#        - db:db
